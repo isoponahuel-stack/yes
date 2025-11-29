@@ -1,0 +1,543 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>El Alma Gemela Cósmica - Descubre tu Signo Compatible</title>
+    <!-- Incluye Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Configuración para usar la fuente Inter -->
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap');
+        body {
+            font-family: 'Inter', sans-serif;
+            /* Fondo de galaxia estrellada usando múltiples capas de gradientes */
+            background-color: #0d0a13; 
+            background-image: 
+                /* Estrellas blancas pequeñas y distantes */
+                radial-gradient(2px 2px at 20px 30px, #ffffff, rgba(255, 255, 255, 0)),
+                radial-gradient(1px 1px at 50px 100px, #fbc2eb, rgba(251, 194, 235, 0)),
+                radial-gradient(1.5px 1.5px at 150px 200px, #cf8bf3, rgba(207, 139, 243, 0)),
+                /* Gradiente base oscuro y profundo para el ambiente cósmico */
+                radial-gradient(at 70% 30%, #150e20 0%, #0d0a13 50%, #05040a 100%);
+            
+            /* Ajusta el tamaño y repetición de las estrellas para cubrir el viewport */
+            background-size: 1500px 1500px, 1200px 1200px, 800px 800px, 100% 100%;
+            background-repeat: repeat, repeat, repeat, no-repeat;
+            background-attachment: fixed; /* Mantiene las estrellas fijas al hacer scroll */
+            
+            color: #e5e5e5;
+        }
+        .quiz-container {
+            background-image: linear-gradient(145deg, #1f1a30 0%, #151120 100%);
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+            border: 2px solid #5a3c9b;
+        }
+        .cta-button {
+            background-image: linear-gradient(45deg, #a770ef 0%, #cf8bf3 50%, #fbc2eb 100%);
+            transition: transform 0.1s ease, box-shadow 0.1s ease;
+            color: #1a0b36;
+            font-weight: 700;
+        }
+        .cta-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(251, 194, 235, 0.4);
+        }
+        .radio-label {
+            transition: all 0.2s ease;
+            border: 2px solid #5a3c9b;
+        }
+        input[type="radio"]:checked + .radio-label {
+            background-color: #5a3c9b;
+            border-color: #fbc2eb;
+            color: #ffffff;
+        }
+    </style>
+</head>
+<body class="min-h-screen flex items-center justify-center p-4">
+
+    <div id="quiz-funnel" class="w-full max-w-xl p-8 rounded-xl quiz-container">
+        <!-- Contenido del Quiz se inyectará aquí -->
+    </div>
+
+    <script>
+        // --- CONFIGURACIÓN Y ESTADO DEL QUIZ ---
+        const quizData = {
+            step: 0,
+            answers: {},
+            initialData: {
+                starSign: '',
+                timeOfBirth: '',
+                email: '',
+            },
+            totalQuestions: 12,
+            price: 19.99,
+            currency: '€',
+            compatibleSigns: {
+                'Aries': 'Libra',
+                'Tauro': 'Escorpio',
+                'Géminis': 'Sagitario',
+                'Cáncer': 'Capricornio',
+                'Leo': 'Acuario',
+                'Virgo': 'Piscis',
+                'Libra': 'Aries',
+                'Escorpio': 'Tauro',
+                'Sagitario': 'Géminis',
+                'Capricornio': 'Cáncer',
+                'Acuario': 'Leo',
+                'Piscis': 'Virgo'
+            },
+            zodiacSigns: [
+                'Aries', 'Tauro', 'Géminis', 'Cáncer', 'Leo', 'Virgo',
+                'Libra', 'Escorpio', 'Sagitario', 'Capricornio', 'Acuario', 'Piscis'
+            ],
+            questions: [
+                {
+                    id: 1,
+                    text: "¿Qué papel juegas en una relación? ¿Eres el/la que *inicia* y empuja, o el/la que *apoya* y mantiene la armonía?",
+                    options: ['El/la iniciador/a (Acción)', 'El/la armonizador/a (Estabilidad)'],
+                    persona: 'Liderazgo vs. Equilibrio',
+                },
+                {
+                    id: 2,
+                    text: "En un conflicto, ¿prefieres la confrontación directa y rápida, o evitar la tensión para buscar la paz después?",
+                    options: ['La verdad, aunque duela (Fuego/Aire)', 'La paz es lo primero (Tierra/Agua)'],
+                    persona: 'Conflicto',
+                },
+                {
+                    id: 3,
+                    text: "¿Cuál es tu idea de una escapada perfecta? ¿Un viaje exótico y espontáneo, o un retiro planificado y lujoso en un lugar conocido?",
+                    options: ['Aventura espontánea (Cambio)', 'Comodidad planeada (Seguridad)'],
+                    persona: 'Estilo de Vida',
+                },
+                {
+                    id: 4,
+                    text: "¿Qué es más importante para ti? ¿Tener una pareja que *entienda* tus emociones profundas o una que *estimule* tu mente con ideas nuevas?",
+                    options: ['Conexión emocional profunda (Agua)', 'Conexión intelectual desafiante (Aire)'],
+                    persona: 'Necesidad Principal',
+                },
+                {
+                    id: 5,
+                    text: "Cuando tienes un objetivo, ¿cómo llegas a él? ¿Con una fuerza de voluntad inquebrantable, o adaptándote y ajustando el plan sobre la marcha?",
+                    options: ['Fuerza fija y constante (Fijo)', 'Flexibilidad y adaptabilidad (Mutable)'],
+                    persona: 'Modalidad',
+                },
+                {
+                    id: 6,
+                    text: "Si pudieras cambiar algo de tu vida amorosa, ¿sería *ser menos exigente* o *ser más abierto/a* a lo inesperado?",
+                    options: ['Ser menos exigente (Perfeccionismo)', 'Ser más abierto/a (Miedo a lo nuevo)'],
+                    persona: 'Barrera Personal',
+                },
+                {
+                    id: 7,
+                    text: "¿Qué temes más: la rutina y el aburrimiento, o la inestabilidad y el caos emocional?",
+                    options: ['Temo la rutina (Aire/Fuego)', 'Temo la inestabilidad (Tierra/Agua)'],
+                    persona: 'Miedo Secreto',
+                },
+                {
+                    id: 8,
+                    text: "¿Cómo muestras amor? ¿Con grandes gestos y declaraciones de admiración, o con actos de servicio y dedicación en el día a día?",
+                    options: ['Gestos grandiosos (Visibilidad)', 'Servicio y cuidado práctico (Praxis)'],
+                    persona: 'Lenguaje del Amor',
+                },
+                {
+                    id: 9,
+                    text: "Tu pareja ideal debe ser, ante todo: ¿Tu mejor amigo/a y confidente, o tu mayor inspiración y maestro/a?",
+                    options: ['Amigo/a y Confidente (Plutón/Luna)', 'Maestro/a e Inspiración (Júpiter/Sol)'],
+                    persona: 'Rol del Compañero',
+                },
+                {
+                    id: 10,
+                    text: "¿Qué necesitas que te digan cuando te sientes vulnerable? ¿Un plan práctico para solucionarlo, o un abrazo sincero sin palabras?",
+                    options: ['Soluciones concretas (Tierra)', 'Validación y consuelo (Agua)'],
+                    persona: 'Vulnerabilidad',
+                },
+                {
+                    id: 11,
+                    text: "Si tu vida fuera un jardín, ¿qué buscas en tu pareja: el agua que nutre el crecimiento, o el sol que permite que todo brille?",
+                    options: ['El agua que nutre (Nutrición)', 'El sol que da brillo (Fama/Felicidad)'],
+                    persona: 'Metáfora del Amor',
+                },
+                {
+                    id: 12,
+                    text: "En este momento, ¿cuán *desesperado/a* estás por saber quién es el único signo que puede darte la felicidad duradera que mereces?",
+                    options: ['Necesito esta información AHORA.', 'Estoy muy interesado/a, pero puedo esperar.'],
+                    persona: 'Desesperación/Deseo', // La pregunta de venta final.
+                },
+            ],
+        };
+
+        const funnelElement = document.getElementById('quiz-funnel');
+        
+        // --- UTILIDADES ---
+        function getStarSign() {
+            // Aseguramos que siempre haya un valor por defecto si el signo no está establecido.
+            return quizData.initialData.starSign || 'Visitante Astral';
+        }
+
+        function getCompatibleSign() {
+            const sign = getStarSign();
+            // Si el signo no es válido (ej: 'Visitante Astral'), devuelve un valor neutro.
+            return quizData.compatibleSigns[sign] || 'Un Signo Único';
+        }
+
+        /**
+         * Devuelve el beneficio emocional clave que el signo compatible ofrece al usuario.
+         * Esto hace que el mensaje final sea más personalizado.
+         */
+        function getCompatibleBenefit(sign) {
+            switch (sign) {
+                case 'Libra':
+                case 'Acuario':
+                case 'Géminis':
+                    return 'equilibrio mental y la comunicación abierta';
+                case 'Escorpio':
+                case 'Piscis':
+                case 'Cáncer':
+                    return 'profundidad emocional y el sustento intuitivo';
+                case 'Capricornio':
+                case 'Tauro':
+                case 'Virgo':
+                    return 'seguridad material y la estructura duradera';
+                case 'Aries':
+                case 'Leo':
+                case 'Sagitario':
+                    return 'pasión inagotable y la aventura compartida';
+                default:
+                    return 'felicidad que te mereces';
+            }
+        }
+
+        function getProgress() {
+            if (quizData.step === 0) return 0;
+            if (quizData.step === 1) return 15;
+            if (quizData.step > 1 && quizData.step <= quizData.totalQuestions + 1) {
+                // El 70% del progreso se divide entre las 12 preguntas
+                return 15 + ((quizData.step - 2) / quizData.totalQuestions) * 70;
+            }
+            if (quizData.step === quizData.totalQuestions + 2) return 95; // Paywall step (95% para generar urgencia)
+            if (quizData.step === quizData.totalQuestions + 3) return 100; // Resultado Final
+            return 100;
+        }
+
+        function setStep(step) {
+            quizData.step = step;
+            render();
+        }
+
+        function showMessage(msg) {
+            const errorBox = document.getElementById('error-message');
+            if (errorBox) {
+                errorBox.textContent = msg;
+                errorBox.classList.remove('hidden');
+            }
+        }
+        
+        // --- MANEJADORES DE EVENTOS ---
+        function handleStartQuiz() {
+            const starSign = document.getElementById('star-sign').value;
+            const timeOfBirth = document.getElementById('time-of-birth').value;
+            const email = document.getElementById('email').value;
+
+            if (!starSign || !timeOfBirth || !email) {
+                showMessage('⚠️ Por favor, completa tu Signo, Hora y Email para comenzar tu Lectura.');
+                return;
+            }
+
+            // Simple email validation
+            if (!email.includes('@') || !email.includes('.')) {
+                showMessage('⚠️ Ingresa un email válido. ¡Necesitas el resultado!');
+                return;
+            }
+
+            // Guardar los datos iniciales
+            quizData.initialData = { starSign, timeOfBirth, email };
+            setStep(1); // Mover al paso de la primera pregunta
+        }
+
+        function handleAnswer(questionId, answerIndex) {
+            quizData.answers[questionId] = answerIndex;
+            // Retraso para ver la selección y luego avanzar
+            setTimeout(() => {
+                if (quizData.step < quizData.totalQuestions + 1) {
+                    setStep(quizData.step + 1);
+                } else {
+                    setStep(quizData.totalQuestions + 2); // Ir al Paywall
+                }
+            }, 300);
+        }
+
+        /**
+         * Simula la iniciación del pago, deshabilita el botón y espera 2 segundos
+         * antes de avanzar al resultado final.
+         * * NOTA: ESTA FUNCIÓN DEBE SER REEMPLAZADA CON LA LÓGICA REAL DE STIPE/PAGO.
+         */
+        function handlePaymentInitiate(event) {
+            const button = event.target;
+            // Deshabilitar botón y mostrar estado de carga para simular el procesamiento
+            button.disabled = true;
+            button.innerHTML = 'Procesando Pago Cósmico... 🌌';
+            button.classList.add('opacity-75', 'cursor-not-allowed');
+
+            // Simular tiempo de procesamiento de pago (2 segundos)
+            setTimeout(() => {
+                console.log('Pago simulado exitoso. Revelando el resultado.');
+                setStep(quizData.totalQuestions + 3); // Ir al Resultado Final
+            }, 2000);
+        }
+
+
+        // --- RENDERS DE VISTAS ---
+
+        // Vista 0: Introducción y Recolección de Datos
+        function renderIntro() {
+            return `
+                <h1 class="text-3xl md:text-4xl font-extrabold text-center mb-4 text-[#fbc2eb]">
+                    ¿Quién es tu Alma Gemela Cósmica?
+                </h1>
+                <h2 class="text-xl text-center mb-8 text-[#cf8bf3]">
+                    El Único Quiz que Revela el Signo con el que Estás Destinado/a.
+                </h2>
+                
+                <div class="space-y-4">
+                    <p class="text-center text-sm text-gray-400">
+                        Solo 3 minutos. Tu destino está a solo 12 preguntas de distancia.
+                    </p>
+
+                    <!-- Paso 1: Datos Astrales y Email (LA VENTA PERSUASIVA) -->
+                    <div class="bg-[#151120] p-6 rounded-lg border border-[#5a3c9b] shadow-xl">
+                        <h3 class="text-2xl font-bold mb-4 text-[#a770ef]">Tu Momento Estelar</h3>
+                        <p class="text-sm mb-4 text-gray-300">
+                            Para una precisión que te dejará sin aliento, necesitamos tus datos iniciales. El Ascendente es la clave de tu magnetismo en el amor.
+                        </p>
+                        
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                            <!-- Signo Solar -->
+                            <div>
+                                <label for="star-sign" class="block text-sm font-medium mb-1 text-gray-200">1. ¿Bajo qué Sol naciste?</label>
+                                <select id="star-sign" class="w-full p-2 rounded bg-[#0d0a13] border border-[#5a3c9b] text-white">
+                                    <option value="">Selecciona tu Signo</option>
+                                    ${quizData.zodiacSigns.map(sign => `<option value="${sign}">${sign}</option>`).join('')}
+                                </select>
+                            </div>
+                            
+                            <!-- Hora de Nacimiento -->
+                            <div>
+                                <label for="time-of-birth" class="block text-sm font-medium mb-1 text-gray-200">2. El Momento Mágico (Hora de Nacimiento)</label>
+                                <input type="time" id="time-of-birth" required class="w-full p-2 rounded bg-[#0d0a13] border border-[#5a3c9b] text-white">
+                                <p class="text-xs text-gray-500 mt-1">
+                                    *La hora exacta es crucial para calcular tu Ascendente.
+                                </p>
+                            </div>
+                        </div>
+
+                        <!-- Email (Lead Magnet) -->
+                        <div class="mb-6">
+                            <label for="email" class="block text-sm font-medium mb-1 text-gray-200">3. ¿A dónde enviamos tu resultado (tu Mapa del Destino)?</label>
+                            <input type="email" id="email" placeholder="tu.email.secreto@destino.com" required class="w-full p-3 rounded bg-[#0d0a13] border border-[#fbc2eb] text-white">
+                        </div>
+                    </div>
+                    
+                    <p id="error-message" class="text-center text-red-400 font-semibold hidden"></p>
+
+                    <button onclick="handleStartQuiz()" class="cta-button w-full py-4 rounded-xl text-lg tracking-wider transform">
+                        ¡Comienza el Análisis AHORA! <span class="text-sm opacity-70 block -mt-1">(Quedan 12 Preguntas)</span>
+                    </button>
+                </div>
+                
+                <p class="text-center text-xs mt-6 text-gray-500">
+                    Tu privacidad es sagrada. Usamos tus datos solo para esta lectura ultra-personalizada.
+                </p>
+            `;
+        }
+
+        // Vista 1-12: Preguntas del Quiz
+        function renderQuizQuestion() {
+            const qIndex = quizData.step - 1; // 1-12 preguntas -> índice 0-11
+            const question = quizData.questions[qIndex];
+            
+            // Si no hay pregunta, avanzamos al paywall (aunque handleAnswer ya lo hace, es una seguridad)
+            if (!question) {
+                setStep(quizData.totalQuestions + 2);
+                return;
+            }
+
+            const currentQ = quizData.step;
+            
+            return `
+                <!-- Barra de Progreso -->
+                <div class="mb-8">
+                    <div class="text-center text-sm font-semibold mb-2 text-[#cf8bf3]">
+                        Análisis Personalizado: Pregunta ${currentQ} de ${quizData.totalQuestions}
+                    </div>
+                    <div class="h-2 bg-[#1f1a30] rounded-full overflow-hidden">
+                        <div class="h-full bg-[#a770ef] transition-all duration-500 ease-out rounded-full" style="width: ${getProgress()}%"></div>
+                    </div>
+                </div>
+
+                <div class="bg-[#151120] p-6 rounded-lg border border-[#fbc2eb] shadow-xl text-center">
+                    <h3 class="text-2xl font-extrabold mb-6 text-[#fbc2eb]">
+                        ${question.text}
+                    </h3>
+
+                    <div class="space-y-4">
+                        ${question.options.map((option, index) => `
+                            <div class="relative">
+                                <input type="radio" id="q${currentQ}-opt${index}" name="question-${currentQ}" 
+                                       class="hidden" value="${index}" 
+                                       onclick="handleAnswer(${question.id}, ${index})">
+                                <label for="q${currentQ}-opt${index}" 
+                                       class="radio-label block p-4 rounded-lg cursor-pointer hover:bg-[#1f1a30]">
+                                    ${option}
+                                </label>
+                            </div>
+                        `).join('')}
+                    </div>
+                </div>
+                
+                <p class="text-center text-xs mt-6 text-gray-500">
+                    Tu signo solar inicial es ${getStarSign()}. Esto es un paso crucial para confirmar tus verdaderas necesidades.
+                </p>
+            `;
+        }
+
+        // Vista 14: Muro de Pago Persuasivo (Paywall)
+        function renderPaywall() {
+            // Utilizamos la función segura getStarSign()
+            const starSign = getStarSign();
+            const compatibleSign = getCompatibleSign();
+            // Extracción segura del email
+            const { email = 'tu.email' } = quizData.initialData;
+
+            return `
+                <!-- Barra de Progreso - 95% -->
+                <div class="mb-8">
+                    <div class="text-center text-sm font-semibold mb-2 text-[#cf8bf3]">
+                        Análisis Completo: 95% Finalizado
+                    </div>
+                    <div class="h-2 bg-[#1f1a30] rounded-full overflow-hidden">
+                        <div class="h-full bg-[#a770ef] transition-all duration-500 ease-out rounded-full" style="width: ${getProgress()}%"></div>
+                    </div>
+                </div>
+
+                <div class="bg-[#241d38] p-8 rounded-xl border-4 border-[#fbc2eb] text-center shadow-[0_0_40px_rgba(251,194,235,0.3)]">
+                    <h3 class="text-3xl font-extrabold mb-3 text-[#fbc2eb]">
+                        ¡FELICIDADES, ${starSign.toUpperCase()}! 
+                    </h3>
+                    <p class="text-xl font-semibold mb-6 text-[#cf8bf3]">
+                        Hemos completado tu Mapa del Destino.
+                    </p>
+
+                    <div class="text-left mb-6 space-y-3">
+                        <p class="text-lg text-gray-300">
+                            Después de analizar tu **Signo Solar** (${starSign}), tu **Ascendente** (hora de nacimiento) y tus **12 respuestas personales**, hemos descubierto exactamente qué tipo de energía buscas en una pareja.
+                        </p>
+                        <p class="text-lg font-bold text-white">
+                            Tu alma gemela es, sin lugar a dudas, alguien del signo: <span class="text-2xl text-[#fbc2eb] font-extrabold block mt-2">${compatibleSign.toUpperCase()}</span>
+                        </p>
+                        <p class="text-xl text-red-300 font-bold italic">
+                            ¡El resultado está listo para ser revelado!
+                        </p>
+                    </div>
+
+                    <!-- Oferta Irresistible -->
+                    <div class="bg-[#0d0a13] p-4 rounded-lg border border-[#a770ef] mb-6">
+                        <p class="text-2xl font-bold line-through text-gray-500">Valor Real: €99.99</p>
+                        <p class="text-4xl font-extrabold text-[#fbc2eb] my-2">
+                            Tu Acceso Hoy: SOLO ${quizData.price.toFixed(2)}${quizData.currency}
+                        </p>
+                        <p class="text-sm text-gray-400">
+                            Pago Único. Acceso Ilimitado. No es una suscripción.
+                        </p>
+                    </div>
+
+                    <p class="text-sm mb-6 text-gray-400">
+                        Por solo ${quizData.price.toFixed(2)}${quizData.currency}, desbloqueas al instante:
+                        <ul class="list-disc list-inside text-left mx-auto max-w-xs mt-2 space-y-1 text-gray-300">
+                            <li>El nombre de tu Signo Compatible, **${compatibleSign}**</li>
+                            <li>Un informe de **5 páginas** sobre cómo conquistar a un/a ${compatibleSign}.</li>
+                            <li>Los 3 errores que **NUNCA** debes cometer con este signo.</li>
+                        </ul>
+                    </p>
+
+                    <button onclick="handlePaymentInitiate(event)" class="cta-button w-full py-4 rounded-xl text-xl tracking-wider transform">
+                        ¡SÍ! Desbloquear mi Alma Gemela por ${quizData.price.toFixed(2)}${quizData.currency}
+                    </button>
+                </div>
+            `;
+        }
+
+        // Vista 15: Resultado Final
+        function renderFinalResult() {
+            // Utilizamos la función segura getStarSign()
+            const starSign = getStarSign();
+            const compatibleSign = getCompatibleSign();
+            // Extracción segura del email
+            const { email = 'tu.email' } = quizData.initialData;
+            // Obtener el beneficio dinámico
+            const benefit = getCompatibleBenefit(compatibleSign);
+
+
+            return `
+                <div class="text-center p-8 bg-[#241d38] rounded-xl border-4 border-[#fbc2eb] shadow-[0_0_40px_rgba(251,194,235,0.3)]">
+                    <h1 class="text-4xl font-extrabold mb-4 text-[#fbc2eb]">¡El Destino te ha Hablado!</h1>
+                    <p class="text-2xl font-semibold mb-8 text-[#cf8bf3]">
+                        ${starSign}, tu compatibilidad ha sido CONFIRMADA.
+                    </p>
+
+                    <p class="text-xl text-gray-300 mb-4">
+                        Según tu Carta Natal y tus necesidades emocionales reveladas en el quiz, tu **Alma Gemela Cósmica** es...
+                    </p>
+
+                    <div class="my-8">
+                        <span class="text-7xl font-black block text-transparent bg-clip-text bg-gradient-to-r from-[#a770ef] to-[#fbc2eb] leading-tight">
+                            ${compatibleSign.toUpperCase()}
+                        </span>
+                    </div>
+
+                    <p class="text-lg text-gray-300 mb-6">
+                        Una relación con ${compatibleSign} te proporcionará el <strong class="text-[#fbc2eb]">${benefit}</strong> que tu espíritu ${starSign} ha estado buscando. Revisa tu email <strong class="text-[#cf8bf3]">(${email})</strong>. ¡Tu informe detallado de 5 páginas está en camino!
+                    </p>
+                    
+                    <a href="#" class="cta-button inline-block py-3 px-8 rounded-full text-lg mt-4">
+                        Descarga el Informe Completo
+                    </a>
+                </div>
+            `;
+        }
+
+        // Función Principal de Renderizado
+        function render() {
+            let html = '';
+            
+            if (quizData.step === 0) {
+                html = renderIntro();
+            } else if (quizData.step >= 1 && quizData.step <= quizData.totalQuestions + 1) {
+                // Las 12 preguntas
+                html = renderQuizQuestion();
+            } else if (quizData.step === quizData.totalQuestions + 2) {
+                // Muro de Pago
+                html = renderPaywall();
+            } else if (quizData.step === quizData.totalQuestions + 3) {
+                // Resultado Final
+                html = renderFinalResult();
+            }
+
+            funnelElement.innerHTML = html;
+            // Asegurarse de que los datos iniciales se repoblen si se regresa a la introducción
+            if (quizData.step === 0) {
+                document.getElementById('star-sign').value = quizData.initialData.starSign;
+                document.getElementById('time-of-birth').value = quizData.initialData.timeOfBirth;
+                document.getElementById('email').value = quizData.initialData.email;
+            }
+        }
+
+        // Iniciar el quiz al cargar la página
+        window.onload = () => {
+            render();
+        };
+
+    </script>
+
+</body>
+</html>
